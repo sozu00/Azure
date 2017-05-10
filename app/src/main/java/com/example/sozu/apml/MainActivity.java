@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         B.setOnClickListener(MainActivity.this);
 
-        textElement.setText("POLLAS");
+        textElement.setText("Prueba");
     }
 
     public void onClick(View v) {
