@@ -4,14 +4,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import java.util.ArrayList;
+
 public class JsonReader {
 
-    public String read() {
+    public String read(ArrayList<XYZ> xyz) {
 
         JSONParser parser = new JSONParser();
 
         try {
-            getJson g = new getJson();
+            getJson g = new getJson(xyz);
             Object obj = parser.parse(g.get());
             JSONObject jsonObject = (JSONObject) obj;
 
