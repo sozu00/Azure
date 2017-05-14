@@ -1,13 +1,15 @@
 package com.example.sozu.apml;
 
+import java.util.Comparator;
+
 /**
  * Created by sozu on 14/05/2017.
  */
 
 public interface Comparador{
-    public int compare(XYZ a, XYZ b);
+    int compare(XYZ a, XYZ b);
 }
-public class ComparadorX implements Comparador{
+class ComparadorX implements Comparador, Comparator<XYZ>{
     @Override
     public int compare(XYZ a, XYZ b) {
         if (a.X() > b.X()) return 1;
@@ -16,16 +18,15 @@ public class ComparadorX implements Comparador{
     }
 }
 
-public class ComparadorY implements Comparador{
+class ComparadorY implements Comparador, Comparator<XYZ>{
     public int compare(XYZ a, XYZ b) {
         if (a.Y() > b.Y()) return 1;
         if (a.Y() < b.Y()) return -1;
         return 0;
     }
 }
-}
 
-public class ComparadorZ implements Comparador{
+class ComparadorZ implements Comparador, Comparator<XYZ>{
     @Override
     public int compare(XYZ a, XYZ b) {
         if (a.Z() > b.Z()) return 1;
@@ -33,7 +34,8 @@ public class ComparadorZ implements Comparador{
         return 0;
     }
 }
-public class ComparadorMag implements Comparador{
+
+class ComparadorMag implements Comparador, Comparator<XYZ>{
     @Override
     public int compare(XYZ a, XYZ b) {
         if (a.Mag() > b.Mag()) return 1;
