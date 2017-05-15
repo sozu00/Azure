@@ -5,14 +5,12 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
@@ -30,8 +28,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textElement = (TextView) findViewById(R.id.texto);
-        textElement2 = (TextView) findViewById(R.id.texto2);
-        textElement.setText("");
+        //textElement.setText("");
 
         gravity = new double[3];
         linear_acceleration = new double[3];
@@ -49,6 +46,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Datos = new ArrayList<>();
     }
 
+    public void onPause()
+    {
+        //Detiene el acelerometro en caso de cerrar la APP, sino consume mucha bateria
+        super.onPause();
+        SM.unregisterListener(this);
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
     public void calcPos(View v) {
 
         TextView textElement = (TextView) findViewById(R.id.texto);
@@ -84,10 +93,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         linear_acceleration[1] = event.values[1] - gravity[1];
         linear_acceleration[2] = event.values[2] - gravity[2];
 
-        //Datos.add(new XYZ(0,9,0));
-        Datos.add(new XYZ(linear_acceleration[0]*100000000000000.0, linear_acceleration[1]*100000000000000.0, linear_acceleration[2]*100000000000000.0));
-        textElement2.setText("X: "+linear_acceleration[0]+"\nY: "+linear_acceleration[1]+"\nZ: "+linear_acceleration[2]);
-
+        Datos.add(new XYZ(linear_acceleration[0], linear_acceleration[1], linear_acceleration[2]));
         //Calculo con gravedad eliminada
     }
 

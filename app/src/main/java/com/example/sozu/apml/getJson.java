@@ -68,7 +68,6 @@ public class getJson {
                     "\",\"tBodyAccMag-ARCoeff-3\": \"" +String.valueOf(F.arCoeffMag()[2]).replace('.',',')+
                     "\",\"tBodyAccMag-ARCoeff-4\": \"" +String.valueOf(F.arCoeffMag()[3]).replace('.',',')+
                     "\",\"CLASE\": \"4\",}],},\"GlobalParameters\":  {}}";
-            String data2 = "{\"Inputs\": {\"input1\": [{\"tBodyAcc-Mean-1\": \"0,043579674\",\"tBodyAcc-Mean-2\": \"-0,005970221\",\"tBodyAcc-Mean-3\": \"-0,035054344\",\"tBodyAcc-STD-1\": \"-0,99538116\",\"tBodyAcc-STD-2\": \"-0,988365863\",\"tBodyAcc-STD-3\": \"-0,937382005\",\"tBodyAcc-Mad-1\": \"-0,995007045\",\"tBodyAcc-Mad-2\": \"-0,988815577\",\"tBodyAcc-Mad-3\": \"-0,953325201\",\"tBodyAcc-Max-1\": \"-0,802536649\",\"tBodyAcc-Max-2\": \"-0,794796369\",\"tBodyAcc-Max-3\": \"-0,648447245\",\"tBodyAcc-Min-1\": \"0,841795574\",\"tBodyAcc-Min-2\": \"0,708440184\",\"tBodyAcc-Min-3\": \"0,651716486\",\"tBodyAcc-SMA-1\": \"-0,975752033\",\"tBodyAcc-Energy-1\": \"-0,999950218\",\"tBodyAcc-Energy-2\": \"-0,999888368\",\"tBodyAcc-Energy-3\": \"-0,998013666\",\"tBodyAcc-IQR-1\": \"-0,993999294\",\"tBodyAcc-IQR-2\": \"-0,991979622\",\"tBodyAcc-IQR-3\": \"-0,970970054\",\"tBodyAcc-ropy-1\": \"-0,547095381\",\"tBodyAcc-ropy-2\": \"-0,70097364\",\"tBodyAcc-ropy-3\": \"-0,622697109\",\"tBodyAcc-ARCoeff-1\": \"0,921884153\",\"tBodyAcc-ARCoeff-2\": \"-0,719482881\",\"tBodyAcc-ARCoeff-3\": \"0,342168007\",\"tBodyAcc-ARCoeff-4\": \"-0,161317646\",\"tBodyAcc-ARCoeff-5\": \"0,266048969\",\"tBodyAcc-ARCoeff-6\": \"-0,274351454\",\"tBodyAcc-ARCoeff-7\": \"0,26720509\",\"tBodyAcc-ARCoeff-8\": \"-0,020958427\",\"tBodyAcc-ARCoeff-9\": \"0,382610239\",\"tBodyAcc-ARCoeff-10\": \"-0,501748058\",\"tBodyAcc-ARCoeff-11\": \"0,51246321\",\"tBodyAcc-ARCoeff-12\": \"-0,206336868\",\"tBodyAccMag-Mean-1\": \"-0,969546337\",\"tBodyAccMag-STD-1\": \"-0,961539739\",\"tBodyAccMag-Mad-1\": \"-0,967645839\",\"tBodyAccMag-Max-1\": \"-0,9472362\",\"tBodyAccMag-Min-1\": \"-0,994174403\",\"tBodyAccMag-SMA-1\": \"-0,969546337\",\"tBodyAccMag-Energy-1\": \"-0,999150002\",\"tBodyAccMag-IQR-1\": \"-0,970525396\",\"tBodyAccMag-ropy-1\": \"-0,21961956\",\"tBodyAccMag-ARCoeff-1\": \"-0,124072048\",\"tBodyAccMag-ARCoeff-2\": \"-0,058240845\",\"tBodyAccMag-ARCoeff-3\": \"0,174306353\",\"tBodyAccMag-ARCoeff-4\": \"0,201620464\",\"CLASE\": \"4\",}],},\"GlobalParameters\":  {}}";
 
             String api_key = "liSWkYtq1dUfqdQTOKmxnNlmX++O77Vla6fsWE2YR61SK6xdrRvUyM9GeCfSg44cMt2xP46Pg/ispbVJyTNCyA==";
             URL url = new URL("https://ussouthcentral.services.azureml.net/workspaces/ca74073338724abfb41e897d53f7358b/services/9ae215b7a794489ea4815e24031f7d7f/execute?api-version=2.0&format=swagger");
@@ -104,7 +103,7 @@ public class getJson {
         }
     }
 
-    public getJson(ArrayList<XYZ> xyz){
+    public getJson(ArrayList<XYZ> xyz) throws Exception {
         F = new FuncionesMat(xyz);
     }
 

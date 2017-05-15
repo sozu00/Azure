@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/texto"
+        android:textSize="32sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/texto"
@@ -15,30 +16,20 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.161" />
-    <TextView
-        android:id="@+id/texto2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/texto2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.447" />
+        app:layout_constraintVertical_bias="0.171"
+        />
 
-    <Button
-        android:id="@+id/calcPos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="calcPos"
-        android:text="Calcular Posicion"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.822" />
+        <Button
+            android:id="@+id/calcPos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="calcPos"
+            android:text="Calcular actividad"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.606" />
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>

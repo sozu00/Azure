@@ -1,9 +1,5 @@
 package com.example.sozu.apml;
 
-import android.provider.ContactsContract;
-
-import org.jtransforms.fft.DoubleFFT_3D;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,8 +14,35 @@ public class FuncionesMat {
 
     private ArrayList<XYZ> Data;
     Comparador Comp;
-    public FuncionesMat(ArrayList<XYZ> xyz){
-        Data = new ArrayList<>(xyz);
+    public FuncionesMat(ArrayList<XYZ> xyz) throws Exception {
+        Data = FilterMean(xyz);
+        if(Data.isEmpty()) throw new ArrayStoreException();//Enviar error de almacenamiento
+    }
+
+    public ArrayList<XYZ> FilterMean(ArrayList<XYZ> xyz){
+        ArrayList<XYZ> Datos = new ArrayList<>(xyz.size());
+        double x,y,z;
+        ArrayList<XYZ> medianHelper = new ArrayList<>();
+        int Lindex;
+        int Uindex;
+        for(int i=0; i<xyz.size();i++){
+            if(i==0) Lindex = i;
+            else Lindex = (i-1);
+            if(i==(xyz.size()-1)) Uindex = i;
+            else Uindex = (i+1);
+            medianHelper.clear();
+            medianHelper.add(xyz.get(Lindex));
+            medianHelper.add(xyz.get(i));
+            medianHelper.add(xyz.get(Uindex));
+            Collections.sort(medianHelper, new ComparadorX());
+            x = medianHelper.get(1).X();
+            Collections.sort(medianHelper, new ComparadorY());
+            y = medianHelper.get(1).Y();
+            Collections.sort(medianHelper, new ComparadorZ());
+            z = medianHelper.get(1).Z();
+            Datos.add(new XYZ(x,y,z));
+        }
+        return Datos;
     }
 
     public double meanX(){
@@ -51,35 +74,19 @@ public class FuncionesMat {
     }
 
     public double medianX(){
-        Comp = new ComparadorX();
-        Collections.sort(Data, (Comparator<? super XYZ>) Comp);
-        int median = Data.size()/2;
-        if(median%2 == 1) return Data.get(median).X();
-        else return (Data.get(median-1).X()+Data.get(median).X())/2;
+        return median(0,Data.size(), 1);
     }
 
     public double medianY(){
-        Comp = new ComparadorY();
-        Collections.sort(Data, (Comparator<? super XYZ>) Comp);
-        int median = Data.size()/2;
-        if(median%2 == 1) return Data.get(median).Y();
-        else return (Data.get(median-1).Y()+Data.get(median).Y())/2;
+        return median(0,Data.size(), 2);
     }
 
     public double medianZ(){
-        Comp = new ComparadorZ();
-        Collections.sort(Data, (Comparator<? super XYZ>) Comp);
-        int median = Data.size()/2;
-        if(median%2 == 1) return Data.get(median).Z();
-        else return (Data.get(median-1).Z()+Data.get(median).Z())/2;
+        return median(0,Data.size(), 3);
     }
 
     public double medianMag(){
-        Comp = new ComparadorMag();
-        Collections.sort(Data, (Comparator<? super XYZ>) Comp);
-        int median = Data.size()/2;
-        if(median%2 == 1) return Data.get(median).Mag();
-        else return (Data.get(median-1).Mag()+Data.get(median).Mag())/2;
+        return median(0,Data.size(), 4);
     }
 
     public double maxX(){

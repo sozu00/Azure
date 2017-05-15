@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">APML</string>
-    <string name="texto">PRUEBA</string>
-    <string name="texto2">PRUEBA2</string>
-
+    <string name="texto">Recogiendo Datos</string>
 </resources>
