@@ -1,34 +1,42 @@
 package com.example.sozu.apml;
 
+import android.graphics.Color;
 import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-
-import android.support.v7.app.AppCompatActivity;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
-    private TextView textElement;
-    private TextView textElement2;
+    public static TextView textElement;
     private Sensor mySensor;
     private SensorManager SM;
-    private ArrayList<XYZ>Datos;
+    public static ArrayList<XYZ>Datos;
     final double alpha = 0.99;
     double[] gravity;
     double[] linear_acceleration;
+    GraphView graph;
+    LineGraphSeries<DataPoint> seriesX;
+    LineGraphSeries<DataPoint> seriesY;
+    LineGraphSeries<DataPoint> seriesZ;
+    private int LastX = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textElement = (TextView) findViewById(R.id.texto);
-        //textElement.setText("");
 
         gravity = new double[3];
         linear_acceleration = new double[3];
@@ -44,43 +52,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Register sensor Listener
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
         Datos = new ArrayList<>();
+
+        graph = (GraphView) findViewById(R.id.graph);
+        seriesX = new LineGraphSeries<>();
+        seriesX.setColor(Color.GREEN);
+        seriesY = new LineGraphSeries<>();
+        seriesY.setColor(Color.RED);
+        seriesZ = new LineGraphSeries<>();
+        seriesZ.setColor(Color.BLUE);
+
+        createGraph(graph, seriesX, "X");
+        createGraph(graph, seriesY, "Y");
+        createGraph(graph, seriesZ, "Z");
+        calcularPosicion.calcPos();
     }
 
-    public void onPause()
-    {
+    public void onPause() {
         //Detiene el acelerometro en caso de cerrar la APP, sino consume mucha bateria
         super.onPause();
         SM.unregisterListener(this);
     }
-
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         SM.registerListener(this, mySensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-    public void calcPos(View v) {
-
-        TextView textElement = (TextView) findViewById(R.id.texto);
-        final String[] t = new String[1];
-        Thread hilo = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try  {
-                    JsonReader g = new JsonReader();
-                    t[0] = g.read(Datos);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        try {
-            hilo.start();
-            hilo.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        textElement.setText(t[0]);
-        Datos.clear();
     }
 
     @Override
@@ -95,10 +89,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Datos.add(new XYZ(linear_acceleration[0], linear_acceleration[1], linear_acceleration[2]));
         //Calculo con gravedad eliminada
+        LastX++;
+        seriesX.appendData(new DataPoint(LastX, linear_acceleration[0]), true, 50);
+        seriesY.appendData(new DataPoint(LastX, linear_acceleration[1]), true, 50);
+        seriesZ.appendData(new DataPoint(LastX, linear_acceleration[2]), true, 50);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //No es necesaria
     }
+
+    private void createGraph(GraphView graph, LineGraphSeries<DataPoint> series, String Col){
+        series.setTitle(Col);
+        graph.addSeries(series);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setScrollable(true);
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(-10);
+        graph.getViewport().setMaxY(10);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(50);
+        graph.getGridLabelRenderer().setGridColor(Color.BLACK);
+        graph.getGridLabelRenderer().setHighlightZeroLines(false);
+        graph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
+        graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+
+        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
+        graph.getGridLabelRenderer().reloadStyles();
+        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+    }
 }
+
