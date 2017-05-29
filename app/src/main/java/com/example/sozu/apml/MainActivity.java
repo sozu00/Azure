@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -19,7 +20,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
-    public static TextView textElement;
+    private TextView textElement;
+    private double tiempo = System.currentTimeMillis();
+    public static int FrecuenciaDeseada = 5000;
     private Sensor mySensor;
     private SensorManager SM;
     public static ArrayList<XYZ>Datos;
@@ -37,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textElement = (TextView) findViewById(R.id.texto);
-
         gravity = new double[3];
         linear_acceleration = new double[3];
         for (int i = 0; i<3; i++)
@@ -64,7 +66,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         createGraph(graph, seriesX, "X");
         createGraph(graph, seriesY, "Y");
         createGraph(graph, seriesZ, "Z");
-        calcularPosicion.calcPos();
+        SeekBar freQ = (SeekBar) findViewById(R.id.freQ);
+
+        freQ.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                MainActivity.FrecuenciaDeseada = progress+1000;
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                TextView Freq = (TextView) findViewById(R.id.frecuencia);
+                Freq.setText("cada "+String.valueOf(FrecuenciaDeseada/1000.0)+" segundos");
+            }
+        });
     }
 
     public void onPause() {
@@ -87,7 +105,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         linear_acceleration[1] = event.values[1] - gravity[1];
         linear_acceleration[2] = event.values[2] - gravity[2];
 
-        Datos.add(new XYZ(linear_acceleration[0], linear_acceleration[1], linear_acceleration[2]));
+        /*En caso de que haya pasado menos de X segundos, sigue almacenando datos
+        *Caso contrario hace la llamada a Azure para mostrar el estado de los ultimos X segundos
+        */
+        if(System.currentTimeMillis() - tiempo < FrecuenciaDeseada )
+           Datos.add(new XYZ(linear_acceleration[0], linear_acceleration[1], linear_acceleration[2]));
+        else {
+            final String[] t = {""};
+            Thread T = new Thread(new Runnable() {@Override public void run() {t[0] = new JsonReader().read(Datos);}});
+
+            T.start();
+            try {T.join();} catch (InterruptedException e) {e.printStackTrace();}
+
+            textElement.setText(t[0]);
+            Datos.clear();
+            tiempo = System.currentTimeMillis();
+        }
         //Calculo con gravedad eliminada
         LastX++;
         seriesX.appendData(new DataPoint(LastX, linear_acceleration[0]), true, 50);
@@ -121,5 +154,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
     }
+
+
 }
 

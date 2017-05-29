@@ -18,7 +18,7 @@ public class JsonReader {
             getJson g;
             try {
                g = new getJson(xyz);
-            }catch (Exception e){return e.toString();}
+            }catch (Exception e){return "Error";}
 
             Object obj = parser.parse(g.get());
             JSONObject jsonObject = (JSONObject) obj;
